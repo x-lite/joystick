@@ -25,10 +25,14 @@ class Joystick {
     }
 
     getData(): JoystickData {
-        let left = pins.analogReadPin(this._xPin) < 512 - this._xThreshold;
-        let right = pins.analogReadPin(this._xPin) > 512 + this._xThreshold;
-        let up = pins.analogReadPin(this._yPin) > 512 + this._yThreshold;
-        let down = pins.analogReadPin(this._yPin) < 512 - this._yThreshold;
+        let x = pins.analogReadPin(this._xPin);
+        let y = pins.analogReadPin(this._yPin);
+        serial.writeLine("x:" + x);
+        serial.writeLine("y:" + y);
+        let left =  x < (512 - this._xThreshold);
+        let right = x > (512 + this._xThreshold);
+        let up = y > (512 + this._yThreshold);
+        let down = y < (512 - this._yThreshold);
         let data = new JoystickData(left, right, up, down, this._a, this._b);
         this._a = false;
         this._b = false;
@@ -73,6 +77,9 @@ class JoystickData {
         return this._b;
     }
 
+    toString(): string {
+        return "";
+    }
 }
 
 class Dot {
