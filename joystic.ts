@@ -96,10 +96,10 @@ class Dot {
         led.plot(this._xPosition, this._yPosition)
     }
     move(info: TickInfo) {
-        // if (info._joystickData.isLeft() && this._xPosition > 0) this._xPosition--;
-        // if (info._joystickData.isRight() && this._xPosition < 4) this._xPosition++;
-        // if (info._joystickData.isDown() && this._yPosition < 4) this._yPosition++;
-        // if (info._joystickData.isUp() && this._yPosition > 0) this._yPosition--;
+        if (info._joystickData.isLeft() && this._xPosition > 0) this._xPosition--;
+        if (info._joystickData.isRight() && this._xPosition < 4) this._xPosition++;
+        if (info._joystickData.isDown() && this._yPosition < 4) this._yPosition++;
+        if (info._joystickData.isUp() && this._yPosition > 0) this._yPosition--;
         if (info._joystickData.isAPressed() && this._xPosition > 0) this._xPosition--;
         if (info._joystickData.isBPressed() && this._xPosition < 4) this._xPosition++;
     }
