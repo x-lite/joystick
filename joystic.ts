@@ -29,8 +29,8 @@ class Joystick {
         let y = pins.analogReadPin(this._yPin);
         serial.writeLine("x:" + x);
         serial.writeLine("y:" + y);
-        let left =  x < (512 - this._xThreshold);
-        let right = x > (512 + this._xThreshold);
+        let right =  x < (512 - this._xThreshold);
+        let left = x > (512 + this._xThreshold);
         let up = y > (512 + this._yThreshold);
         let down = y < (512 - this._yThreshold);
         let data = new JoystickData(left, right, up, down, this._a, this._b);
