@@ -14,6 +14,20 @@ function tick() {
     let tickInfo = new TickInfo(delta, data);
     dot.tick(tickInfo);
 
+    let litCount = 0;
+    for(let x=0; x<5; x++) {
+        for(let y=0; y<4; y++) {
+            if(led.point(x,y)) {
+                litCount++;
+                if(litCount>1) {
+                    return;
+                }
+            }
+        }
+    }
+    
+    led.plotAll();
+  
 }
 
 
