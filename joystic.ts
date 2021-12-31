@@ -31,8 +31,8 @@ class Joystick {
         serial.writeLine("y:" + y);
         let right =  x < (512 - this._xThreshold);
         let left = x > (512 + this._xThreshold);
-        let up = y > (512 + this._yThreshold);
-        let down = y < (512 - this._yThreshold);
+        let down = y > (512 + this._yThreshold);
+        let up = y < (512 - this._yThreshold);
         let data = new JoystickData(left, right, up, down, this._a, this._b);
         this._a = false;
         this._b = false;
