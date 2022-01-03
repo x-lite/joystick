@@ -62,6 +62,8 @@ class Level2 implements Level {
 
     start() {
         this._isActive = true;
+        led.plotAll();
+        led.toggleAll();
     }
     isActive() {
         return this._isActive;

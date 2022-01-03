@@ -80,8 +80,11 @@ class Bomb implements Character {
     }
 
     move(info: TickInfo) {
-        if(info._delta)
         this._yPosition++;
+        if(this._yPosition > 4) {
+            this._yPosition = 0;
+            this._xPosition++;
+        }
     }
 
     isActive() {
