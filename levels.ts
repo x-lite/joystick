@@ -1,4 +1,4 @@
-class Level1 implements Level {
+class PacmanLevel implements Level {
     
     _pacman: Pacman;
     _isActive: boolean;
@@ -38,7 +38,30 @@ class Level1 implements Level {
     }
 }
 
-class Level2 implements Level {
+class PacmanEndOfLevel implements Level {
+
+    _isActive: boolean;
+
+    constructor() {
+        this._isActive = false;
+    }
+
+    tick(tickInfo: TickInfo) {
+        let ghost = images.iconImage(IconNames.Ghost);
+        ghost.showImage(0);
+        basic.pause(2000);
+        this._isActive = false;
+    }
+
+    start() {
+        this._isActive = true;
+    }
+    isActive() {
+        return this._isActive;
+    }
+}
+
+class BombLevel implements Level {
 
     _pacman: Pacman;
     _bomb: Bomb;
