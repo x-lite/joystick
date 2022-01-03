@@ -7,13 +7,13 @@
         "microphone": "*"
     },
     "files": [
-        "main.blocks",
         "main.ts",
         "README.md",
         "joystic.ts",
         "tick.ts",
         "cast.ts",
-        "levels.ts"
+        "levels.ts",
+        "utils.ts"
     ],
     "testFiles": [
         "test.ts"

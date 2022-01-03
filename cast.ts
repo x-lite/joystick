@@ -87,6 +87,11 @@ class Bomb implements Character {
         }
     }
 
+    hit() {
+        this._yPosition = utils.getRandomIntInclusive(0,4);
+        this._xPosition = utils.getRandomIntInclusive(0,4);
+    }
+
     isActive() {
         return true;
     }

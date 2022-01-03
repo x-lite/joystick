@@ -26,10 +26,12 @@ class PacmanLevel implements Level {
             }
         }
 
+        serial.writeLine('Pacman complete')
         this._isActive = false;
     }
 
     start() {
+        serial.writeLine('Pacman starting')
         this._isActive = true;
         led.plotAll();
     }
@@ -51,9 +53,11 @@ class PacmanEndOfLevel implements Level {
         ghost.showImage(0);
         basic.pause(2000);
         this._isActive = false;
+        serial.writeLine('Pacman eol complete')
     }
 
     start() {
+        serial.writeLine('Pacman eol starting')
         this._isActive = true;
     }
     isActive() {
@@ -66,7 +70,7 @@ class BombLevel implements Level {
     _pacman: Pacman;
     _bomb: Bomb;
     _isActive: boolean;
-
+    _hits = 0;
     constructor() {
         this._pacman = new Pacman();
         this._bomb = new Bomb();
@@ -74,16 +78,29 @@ class BombLevel implements Level {
     }
 
     tick(tickInfo: TickInfo) {
-
         this._pacman.tick(tickInfo);
         this._bomb.tick(tickInfo);
+        if(this._pacman.getX() == this._bomb.getX() && this._pacman.getY() == this._bomb.getY()) {
+            this.hit();
+        }
+        if(this._hits > 3) {
+            this._isActive = false;
+        }
+    }
 
-        basic.pause(25)
-
-        this._isActive = false;
+    hit() {
+        for (let i = 0; i < 3; i++) {
+            led.plotAll();
+            basic.pause(500)
+            led.toggleAll()
+            basic.pause(500)
+        }
+        this._hits++;
+        this._bomb.hit();
     }
 
     start() {
+        serial.writeLine('BombLevel starting')
         this._isActive = true;
         led.plotAll();
         led.toggleAll();
