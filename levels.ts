@@ -1,6 +1,6 @@
 class PacmanLevel implements Level {
         
-    _pacman: Pacman;
+    _pacman: Character;
     _isActive: boolean;
 
     constructor() {
@@ -66,8 +66,8 @@ class PacmanEndOfLevel implements Level {
 
 class BombLevel implements Level {
 
-    _pacman: Pacman;
-    _bomb: Bomb;
+    _pacman: Character;
+    _bomb: Character;
     _isActive: boolean;
     _hits = 0;
     

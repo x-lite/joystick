@@ -3,6 +3,12 @@ interface Character {
     isActive(): boolean;
     getX(): number;
     getY(): number;
+    hit(): void;
+    withSpeed(speed: number): Character;
+    withFixedYPosition(yPosition: number): Character;
+    withFixedXPosition(xPosition: number): Character;
+    withXposition(xPosition: number): Character;
+    withYposition(yPosition: number): Character;
 }
 
 class AbstractCharacter implements Character {
@@ -37,7 +43,7 @@ class AbstractCharacter implements Character {
     }
 
     move(info: TickInfo) {
-        //no-op
+        //no-op, override this for the behaviour you want
     }
 
     clear() {
@@ -47,6 +53,7 @@ class AbstractCharacter implements Character {
     draw() {
         led.plot(this._xPosition, this._yPosition)
     }
+    
     withSpeed(speed: number) {
         this._speed = speed;
         this._frameDelay = 1000/speed;
@@ -87,6 +94,10 @@ class AbstractCharacter implements Character {
         return this._yPosition;
     }
 
+    hit() {
+        //no-op - override to get the desired hit behaviour
+    }
+
 }
 
 class Pacman extends AbstractCharacter {
@@ -109,40 +120,20 @@ class Pacman extends AbstractCharacter {
         if (info._joystickData.isBPressed() && this._xPosition < 4) this._xPosition++;
     }
     
-
 }
 
-class Bomb implements Character {
-
-    _xPosition: number;
-    _yPosition: number;
-    _waitSoFar: number;
+class Bomb extends AbstractCharacter {
 
     constructor() {
-        this._xPosition = 0;
-        this._yPosition = 0;
-        this._waitSoFar = 0;
+        super('Bomb')
     }
-
-    tick(info: TickInfo) {
-        trace('Bomb tick')
-        this._waitSoFar += info._delta;
-        this.clear();
-        if(this._waitSoFar > 500) {
-            this.move(info);
-            this._waitSoFar = 0;
-        }
-        this.draw();
-    }
-    
-    clear() {
-        led.unplot(this._xPosition, this._yPosition)
-    }
-    
+  
+    //Override so can set brightness
     draw() {
         led.plotBrightness(this._xPosition, this._yPosition, 50)
     }
 
+    //Override move 
     move(info: TickInfo) {
         trace('Bomb move')
         this._yPosition++;
@@ -153,20 +144,9 @@ class Bomb implements Character {
     }
 
     hit() {
+        //move to a new, random position
         this._yPosition = utils.getRandomIntInclusive(0,4);
         this._xPosition = utils.getRandomIntInclusive(0,4);
-    }
-
-    isActive() {
-        return true;
-    }
-
-    getX() {
-        return this._xPosition;
-    }
-
-    getY() {
-        return this._yPosition;
     }
 
 }
