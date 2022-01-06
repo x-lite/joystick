@@ -16,7 +16,7 @@ class Joystick {
         this._yPin = yPin;
         this._xThreshold = xThreshold;
         this._yThreshold = yThreshold;
-        this._joystickActive = false;
+        this._joystickActive = __joystickActive;
 
         input.onButtonPressed(Button.A, function () {
             trace('A clicked');

@@ -4,8 +4,7 @@ class PacmanLevel implements Level {
     _isActive: boolean;
 
     constructor() {
-        this._pacman = new Pacman().withSpeed(10).withXposition(2).withYposition(3)
-        this._isActive = false;
+        this.reset();
     }
     
     tick(tickInfo: TickInfo) {
@@ -28,7 +27,13 @@ class PacmanLevel implements Level {
         info('Pacman complete')
         this._isActive = false;
     }
-
+    reset() {
+        this._pacman = new Pacman()
+            .withSpeed(5)
+            .withXposition(2)
+            .withYposition(3)
+        this._isActive = false;
+    }
     start() {
         info('Pacman starting')
         this._isActive = true;
@@ -39,12 +44,72 @@ class PacmanLevel implements Level {
     }
 }
 
-class PacmanEndOfLevel implements Level {
+class BombLevel implements Level {
+
+    _pacman: Character;
+    _bombs: Character[];
+    _isActive: boolean;
+    _hits = 0;
+    _tickInfo: TickInfo;
+
+    constructor() {
+        this.reset();
+    }
+
+    tick(tickInfo: TickInfo) {
+        this._tickInfo = tickInfo;
+        this._pacman.tick(tickInfo);
+
+        this._bombs.forEach(
+            function (bomb: Character, index: number) {
+                bomb.tick(tickInfo);
+                if (this._pacman.getX() == bomb.getX() && this._pacman.getY() == bomb.getY()) {
+                    bomb.hit();
+                    this.hit();
+                }
+            }
+        )
+
+        if(this._hits > 30) {
+            this._isActive = false;
+            info('BombLevel end')
+        }
+    }
+
+    reset() {
+        this._pacman = new Pacman()
+            .withFixedYPosition(4)
+            .withSpeed(5)
+            .withXposition(0)
+        this._bombs = [];
+        this._bombs.push(new Bomb().withSpeed(5))
+        this._bombs.push(new Bomb().withSpeed(5))
+        this._bombs.push(new Bomb().withSpeed(10))
+        this._bombs.push(new Bomb().withSpeed(2))
+        this._isActive = false;
+    }
+
+    hit() {
+        this._hits++;
+    }
+
+    start() {
+        info('BombLevel starting')
+        this._isActive = true;
+        led.plotAll();
+        led.toggleAll();
+    }
+    isActive() {
+        return this._isActive;
+    }
+}
+
+class EndOfLevel implements Level {
 
     _isActive: boolean;
 
     constructor() {
-        this._isActive = false;
+        this.reset();
     }
 
     tick(tickInfo: TickInfo) {
@@ -62,53 +127,8 @@ class PacmanEndOfLevel implements Level {
     isActive() {
         return this._isActive;
     }
-}
-
-class BombLevel implements Level {
-
-    _pacman: Character;
-    _bomb: Character;
-    _isActive: boolean;
-    _hits = 0;
-    
-    constructor() {
-        this._pacman = new Pacman();
-        this._pacman.withFixedYPosition(4);
-        this._bomb = new Bomb();
+    reset() {
         this._isActive = false;
-    }
-
-    tick(tickInfo: TickInfo) {
-        this._pacman.tick(tickInfo);
-        this._bomb.tick(tickInfo);
-        if(this._pacman.getX() == this._bomb.getX() && this._pacman.getY() == this._bomb.getY()) {
-            this.hit();
-        }
-        if(this._hits > 3) {
-            this._isActive = false;
-            info('BombLevel end')
-        }
-    }
-
-    hit() {
-        for (let i = 0; i < 3; i++) {
-            led.plotAll();
-            basic.pause(200)
-            led.toggleAll()
-            basic.pause(200)
-        }
-        this._hits++;
-        this._bomb.hit();
-    }
-
-    start() {
-        info('BombLevel starting')
-        this._isActive = true;
-        led.plotAll();
-        led.toggleAll();
-    }
-    isActive() {
-        return this._isActive;
     }
 }
 
@@ -116,4 +136,5 @@ interface Level {
     tick(tickInfo: TickInfo): void;
     start():void;
     isActive(): boolean;
+    reset():void;
 }

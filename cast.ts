@@ -140,12 +140,15 @@ class Bomb extends AbstractCharacter {
         if(this._yPosition > 4) {
             this._yPosition = 0;
             this._xPosition++;
+            if(this._xPosition > 4) {
+                this._xPosition = 0;
+            }
         }
     }
 
     hit() {
         //move to a new, random position
-        this._yPosition = utils.getRandomIntInclusive(0,4);
+        this._yPosition = 0; //utils.getRandomIntInclusive(0,4);
         this._xPosition = utils.getRandomIntInclusive(0,4);
     }
 

@@ -32,8 +32,12 @@ function reset () {
     __levelNumber = 1
 }
 
-let __debug = true
+/** Debug settings */
+let __debug = false
 let __silent = false
+let __joystickActive = false
+
+/** Global vars */
 let __lastTick = 0
 let __currentLevel: Level = null
 let __levelNumber = 0
@@ -41,9 +45,7 @@ let __delta = 0
 let joystick = new Joystick(AnalogPin.P0, AnalogPin.P2, 200, 200);
 let levels = [
     new PacmanLevel(),
-    new PacmanEndOfLevel(),
     new BombLevel(),
-    new PacmanEndOfLevel()
 ]
 __levelNumber = 1
 __currentLevel = levels.get(__levelNumber-1);
