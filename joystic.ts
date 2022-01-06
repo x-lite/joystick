@@ -8,6 +8,7 @@ class Joystick {
 
     _xPin: AnalogPin;
     _yPin: AnalogPin;
+    _joystickActive: boolean;
 
     constructor(xPin: AnalogPin, yPin: AnalogPin, xThreshold: number, yThreshold: number) {
 
@@ -15,6 +16,7 @@ class Joystick {
         this._yPin = yPin;
         this._xThreshold = xThreshold;
         this._yThreshold = yThreshold;
+        this._joystickActive = true;
 
         input.onButtonPressed(Button.A, function () {
             this._a = true;
@@ -27,10 +29,10 @@ class Joystick {
     getData(): JoystickData {
         let x = pins.analogReadPin(this._xPin);
         let y = pins.analogReadPin(this._yPin);
-        let right =  x < (512 - this._xThreshold);
-        let left = x > (512 + this._xThreshold);
-        let down = y > (512 + this._yThreshold);
-        let up = y < (512 - this._yThreshold);
+        let right = this._joystickActive && x < (512 - this._xThreshold);
+        let left = this._joystickActive && x > (512 + this._xThreshold);
+        let down = this._joystickActive && y > (512 + this._yThreshold);
+        let up = this._joystickActive && y < (512 - this._yThreshold);
         let data = new JoystickData(left, right, up, down, this._a, this._b);
         this._a = false;
         this._b = false;
@@ -76,7 +78,7 @@ class JoystickData {
     }
 
     toString(): string {
-        return "";
+        return 'Left[' + this._left + '], Right[' + this._right + '], Up[' + this._up + '], Down[' + this._down + '], A[' + this._a + '], B[' + this._b +']';
     }
 }
 

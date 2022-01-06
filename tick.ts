@@ -6,4 +6,9 @@ class TickInfo {
         this._delta = delta;
         this._joystickData = joystickData;
     }
+
+    log() {
+        trace('TickInfo-Delta:' + this._delta)
+        trace(this._joystickData.toString());
+    }
 }

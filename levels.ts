@@ -1,8 +1,8 @@
 class PacmanLevel implements Level {
-    
+        
     _pacman: Pacman;
     _isActive: boolean;
-    
+
     constructor() {
         this._pacman = new Pacman();
         this._isActive = false;
@@ -10,9 +10,8 @@ class PacmanLevel implements Level {
     
     tick(tickInfo: TickInfo) {
 
+        trace('Pacman level tick')
         this._pacman.tick(tickInfo);
-
-        basic.pause(25)
 
         let litCount = 0;
         for (let x = 0; x < 5; x++) {
@@ -26,12 +25,12 @@ class PacmanLevel implements Level {
             }
         }
 
-        serial.writeLine('Pacman complete')
+        info('Pacman complete')
         this._isActive = false;
     }
 
     start() {
-        serial.writeLine('Pacman starting')
+        info('Pacman starting')
         this._isActive = true;
         led.plotAll();
     }
@@ -53,11 +52,11 @@ class PacmanEndOfLevel implements Level {
         ghost.showImage(0);
         basic.pause(2000);
         this._isActive = false;
-        serial.writeLine('Pacman eol complete')
+        info('Pacman eol complete')
     }
 
     start() {
-        serial.writeLine('Pacman eol starting')
+        info('Pacman eol starting')
         this._isActive = true;
     }
     isActive() {
@@ -71,8 +70,10 @@ class BombLevel implements Level {
     _bomb: Bomb;
     _isActive: boolean;
     _hits = 0;
+    
     constructor() {
         this._pacman = new Pacman();
+        this._pacman.setFixedY(4);
         this._bomb = new Bomb();
         this._isActive = false;
     }
@@ -85,22 +86,23 @@ class BombLevel implements Level {
         }
         if(this._hits > 3) {
             this._isActive = false;
+            info('BombLevel end')
         }
     }
 
     hit() {
         for (let i = 0; i < 3; i++) {
             led.plotAll();
-            basic.pause(500)
+            basic.pause(200)
             led.toggleAll()
-            basic.pause(500)
+            basic.pause(200)
         }
         this._hits++;
         this._bomb.hit();
     }
 
     start() {
-        serial.writeLine('BombLevel starting')
+        info('BombLevel starting')
         this._isActive = true;
         led.plotAll();
         led.toggleAll();
