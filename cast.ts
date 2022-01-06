@@ -5,37 +5,97 @@ interface Character {
     getY(): number;
 }
 
-class Pacman implements Character {
+class AbstractCharacter implements Character {
 
     _xPosition: number;
     _yPosition: number;
     _isYfixed: boolean;
-    _yFixed: number;
+    _isXfixed:boolean;
+    _speed: number;
+    _frameDelay: number;
     _waitSoFar: number;
+    _name: String;
 
-    constructor() {
+    constructor(name: String) {
         this._xPosition = 0;
         this._yPosition = 0;
         this._isYfixed = false;
         this._waitSoFar = 0;
+        this._name = name;
     }
+
     tick(info: TickInfo) {
-        trace('Pacman tick')
+        trace(this._name + ' tick')
         this.clear();
         this._waitSoFar += info._delta
-        trace('Pacman waited: ' + this._waitSoFar)
-        if (this._waitSoFar > 100) {
+        trace(this._name + ' waited: ' + this._waitSoFar)
+        if (this._waitSoFar >= this._frameDelay) {
             this.move(info);
             this._waitSoFar = 0;
         }
         this.draw();
     }
+
+    move(info: TickInfo) {
+        //no-op
+    }
+
     clear() {
         led.unplot(this._xPosition, this._yPosition)
     }
+
     draw() {
         led.plot(this._xPosition, this._yPosition)
     }
+    withSpeed(speed: number) {
+        this._speed = speed;
+        this._frameDelay = 1000/speed;
+        return this;
+    }
+
+    withFixedYPosition(yPosition: number) {
+        this._isYfixed=true;
+        this._yPosition = yPosition;
+        return this;
+    }
+
+    withFixedXPosition(xPosition: number) {
+        this._isXfixed = true;
+        this._xPosition = xPosition;
+        return this;
+    }
+
+    withXposition(xPosition: number) {
+        this._xPosition = xPosition;
+        return this;
+    }
+    
+    withYposition(yPosition: number) {
+        this._yPosition = yPosition;
+        return this;
+    }
+
+    isActive() {
+        return true;
+    }
+
+    getX() {
+        return this._xPosition;
+    }
+
+    getY() {
+        return this._yPosition;
+    }
+
+}
+
+class Pacman extends AbstractCharacter {
+
+    constructor() {
+        super('Pacman');
+    }
+
+    //Override the move
     move(info: TickInfo) {
         trace('Pacman move')
         if(!this._isYfixed) {
@@ -49,23 +109,6 @@ class Pacman implements Character {
         if (info._joystickData.isBPressed() && this._xPosition < 4) this._xPosition++;
     }
     
-    isActive() {
-        return true;
-    }
-
-    getX() {
-        return this._xPosition;
-    }
-
-    getY() {
-        return this._yPosition;
-    }
-
-    setFixedY(y: number) {
-        this._isYfixed = true;
-        this._yFixed = y;
-        this._yPosition = y;
-    }
 
 }
 

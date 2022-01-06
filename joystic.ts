@@ -16,12 +16,14 @@ class Joystick {
         this._yPin = yPin;
         this._xThreshold = xThreshold;
         this._yThreshold = yThreshold;
-        this._joystickActive = true;
+        this._joystickActive = false;
 
         input.onButtonPressed(Button.A, function () {
+            trace('A clicked');
             this._a = true;
         })
         input.onButtonPressed(Button.B, function () {
+            trace('B clicked');
             this._b = true;
         })
     }

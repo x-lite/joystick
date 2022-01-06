@@ -1,41 +1,43 @@
 function tick () {
-    if (currentLevel.isActive()) {
-        currentLevel.tick(prepareTickData());
+    if (__debug) pause(500);
+    if (__currentLevel.isActive()) {
+        __currentLevel.tick(prepareTickData());
     } else {
-        levelNumber += 1
-        if (levelNumber > levels.length) {
+        __levelNumber += 1
+        if (__levelNumber > levels.length) {
             reset()
         }
-        currentLevel = levels.get(levelNumber-1);
-        currentLevel.start();
+        __currentLevel = levels.get(__levelNumber-1);
+        __currentLevel.start();
     }
 }
 
 function trace(message: string) {
-    if (debug) serial.writeLine(message)
+    if (__debug) serial.writeLine(message)
 }
 function info(message: string) {
-    serial.writeLine(message)
+    if(!__silent)serial.writeLine(message)
 }
 
 function prepareTickData () {
-    delta = input.runningTime() - lastTick
-    lastTick = input.runningTime()
+    __delta = input.runningTime() - __lastTick
+    __lastTick = input.runningTime()
     let data = joystick.getData();
-    let tickInfo = new TickInfo(delta, data);
+    let tickInfo = new TickInfo(__delta, data);
     tickInfo.log();
     return tickInfo
 }
 
 function reset () {
-    levelNumber = 1
+    __levelNumber = 1
 }
 
-let debug = true
-let lastTick = 0
-let currentLevel: Level = null
-let levelNumber = 0
-let delta = 0
+let __debug = true
+let __silent = false
+let __lastTick = 0
+let __currentLevel: Level = null
+let __levelNumber = 0
+let __delta = 0
 let joystick = new Joystick(AnalogPin.P0, AnalogPin.P2, 200, 200);
 let levels = [
     new PacmanLevel(),
@@ -43,7 +45,7 @@ let levels = [
     new BombLevel(),
     new PacmanEndOfLevel()
 ]
-levelNumber = 1
-currentLevel = levels.get(levelNumber-1);
-currentLevel.start();
+__levelNumber = 1
+__currentLevel = levels.get(__levelNumber-1);
+__currentLevel.start();
 forever(tick);

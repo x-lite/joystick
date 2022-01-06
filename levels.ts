@@ -4,7 +4,7 @@ class PacmanLevel implements Level {
     _isActive: boolean;
 
     constructor() {
-        this._pacman = new Pacman();
+        this._pacman = new Pacman().withSpeed(10).withXposition(2).withYposition(3)
         this._isActive = false;
     }
     
@@ -73,7 +73,7 @@ class BombLevel implements Level {
     
     constructor() {
         this._pacman = new Pacman();
-        this._pacman.setFixedY(4);
+        this._pacman.withFixedYPosition(4);
         this._bomb = new Bomb();
         this._isActive = false;
     }
