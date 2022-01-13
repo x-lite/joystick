@@ -1,24 +1,33 @@
 function tick () {
     if (__debug) pause(500);
+
     if (__currentLevel.isActive()) {
         __currentLevel.tick(prepareTickData());
     } else {
-
-        let score = __currentLevel.getScore()
-        __scoreBoard.show(score);
-
-        __levelNumber += 1
-        if (__levelNumber > levels.length) {
-            reset()
-        }
-        __currentLevel = levels.get(__levelNumber-1);
-        __currentLevel.start();
+        showScore();
+        nextLevel();
     }
+}
+
+function showScore() {
+    //Show scoreboard before moving on
+    let score = __currentLevel.getScore()
+    __scoreBoard.show(score);
+}
+
+function nextLevel() {
+    __levelNumber += 1
+    if (__levelNumber > levels.length) {
+        reset()
+    }
+    __currentLevel = levels.get(__levelNumber - 1);
+    __currentLevel.start();
 }
 
 function trace(message: string) {
     if (__debug) serial.writeLine(message)
 }
+
 function info(message: string) {
     if(!__silent)serial.writeLine(message)
 }
@@ -39,9 +48,9 @@ function reset () {
 }
 
 /** Debug settings */
-let __debug = false
+let __debug = true
 let __silent = false
-let __joystickActive = true
+let __joystickActive = false
 
 /** Global vars */
 let __lastTick = 0

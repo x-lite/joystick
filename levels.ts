@@ -45,6 +45,7 @@ class PacmanLevel implements Level {
         this._isActive = false;
     }
     reset() {
+        info('Resetting pacman level')
         this._pacman = new Pacman()
             .withSpeed(5)
             .withXposition(2)
@@ -101,6 +102,7 @@ class BombLevel implements Level {
     }
 
     reset() {
+        info('Resetting bomb level')
         this._pacman = new Pacman()
             .withFixedYPosition(4)
             .withSpeed(5)
