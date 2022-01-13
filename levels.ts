@@ -1,8 +1,23 @@
+class ScoreBoard {
+    show(score: number) {
+        utils.cls();
+        for (let x = 0; x < score; x++) {
+            led.plot(x, 0)
+            led.plot(x, 1)
+            led.plot(x, 2)
+            led.plot(x, 3)
+            led.plot(x, 4)
+            pause(1000)
+        }
+    }
+}
+
 class PacmanLevel implements Level {
         
     _pacman: Character;
     _isActive: boolean;
-
+    _totalTime: number; //for tracking how long it took to complete the level - the longer it takes the lower the score
+    
     constructor() {
         this.reset();
     }
@@ -11,14 +26,16 @@ class PacmanLevel implements Level {
 
         trace('Pacman level tick')
         this._pacman.tick(tickInfo);
-
+        this._totalTime+=tickInfo._delta;
         let litCount = 0;
-        for (let x = 0; x < 5; x++) {
-            for (let y = 0; y < 5; y++) {
-                if (led.point(x, y)) {
-                    litCount++;
-                    if (litCount > 1) {
-                        return;
+        if(this._totalTime < 15000) {
+            for (let x = 0; x < 5; x++) {
+                for (let y = 0; y < 5; y++) {
+                    if (led.point(x, y)) {
+                        litCount++;
+                        if (litCount > 1) {
+                            return;
+                        }
                     }
                 }
             }
@@ -33,14 +50,19 @@ class PacmanLevel implements Level {
             .withXposition(2)
             .withYposition(3)
         this._isActive = false;
+        this._totalTime = 0;
     }
     start() {
         info('Pacman starting')
         this._isActive = true;
+        this._totalTime = 0;
         led.plotAll();
     }
     isActive() {
         return this._isActive;
+    }
+    getScore() {
+        return 5 - Math.floor(this._totalTime/5000)
     }
 }
 
@@ -51,6 +73,7 @@ class BombLevel implements Level {
     _isActive: boolean;
     _hits = 0;
     _tickInfo: TickInfo;
+    _totalTime: number; //for tracking how long it took to complete the level - the longer it takes the lower the score
 
     constructor() {
         this.reset();
@@ -59,6 +82,7 @@ class BombLevel implements Level {
     tick(tickInfo: TickInfo) {
         this._tickInfo = tickInfo;
         this._pacman.tick(tickInfo);
+        this._totalTime += tickInfo._delta;
 
         this._bombs.forEach(
             function (bomb: Character, index: number) {
@@ -70,7 +94,7 @@ class BombLevel implements Level {
             }
         )
 
-        if(this._hits > 30) {
+        if (this._hits > 30 || this._totalTime > 15000)  {
             this._isActive = false;
             info('BombLevel end')
         }
@@ -87,6 +111,7 @@ class BombLevel implements Level {
         this._bombs.push(new Bomb().withSpeed(10))
         this._bombs.push(new Bomb().withSpeed(2))
         this._isActive = false;
+        this._totalTime = 0;
     }
 
     hit() {
@@ -98,9 +123,13 @@ class BombLevel implements Level {
         this._isActive = true;
         led.plotAll();
         led.toggleAll();
+        this._totalTime = 0;
     }
     isActive() {
         return this._isActive;
+    }
+    getScore() {
+        return 5 - Math.floor(this._totalTime / 3000)
     }
 }
 
@@ -130,6 +159,10 @@ class EndOfLevel implements Level {
     reset() {
         this._isActive = false;
     }
+
+    getScore() {
+        return 0;
+    }
 }
 
 interface Level {
@@ -137,4 +170,5 @@ interface Level {
     start():void;
     isActive(): boolean;
     reset():void;
+    getScore(): number;
 }
