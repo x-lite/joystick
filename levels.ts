@@ -1,6 +1,8 @@
 class ScoreBoard {
     show(score: number) {
+        info('Show score: ' + score)
         utils.cls();
+        pause(2000)
         for (let x = 0; x < score; x++) {
             led.plot(x, 0)
             led.plot(x, 1)
@@ -9,6 +11,7 @@ class ScoreBoard {
             led.plot(x, 4)
             pause(1000)
         }
+        pause(2000)
     }
 }
 
@@ -113,6 +116,7 @@ class BombLevel implements Level {
         this._bombs.push(new Bomb().withSpeed(10))
         this._bombs.push(new Bomb().withSpeed(2))
         this._isActive = false;
+        this._hits = 0;
         this._totalTime = 0;
     }
 
@@ -122,16 +126,16 @@ class BombLevel implements Level {
 
     start() {
         info('BombLevel starting')
+        this.reset()
         this._isActive = true;
         led.plotAll();
         led.toggleAll();
-        this._totalTime = 0;
     }
     isActive() {
         return this._isActive;
     }
     getScore() {
-        return 5 - Math.floor(this._totalTime / 3000)
+        return 5; // - Math.floor(this._totalTime / 3000)
     }
 }
 

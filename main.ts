@@ -16,12 +16,21 @@ function showScore() {
 }
 
 function nextLevel() {
-    __levelNumber += 1
+    info('NextLevel selection starting')
+
+
+    info('....current level is ' + __levelNumber)
+    __levelNumber = __levelNumber + 1
+    info('....next level is ' + __levelNumber)
     if (__levelNumber > levels.length) {
+        info('....no such level, resetting ')
         reset()
     }
+    info('....current level set to ' + __levelNumber)
     __currentLevel = levels.get(__levelNumber - 1);
     __currentLevel.start();
+
+    info('NextLevel selection complete')
 }
 
 function trace(message: string) {
@@ -42,13 +51,15 @@ function prepareTickData () {
 }
 
 function reset () {
+    info('Level reset starting')
     __levelNumber = 1
     pacman.reset();
     bombs.reset();
+    info('Level reset complete')
 }
 
 /** Debug settings */
-let __debug = true
+let __debug = false
 let __silent = false
 let __joystickActive = false
 
@@ -66,6 +77,8 @@ let levels = [
     pacman,
     bombs
 ]
+info('Number of levels registered: ' + levels.length)
+
 __levelNumber = 1
 __currentLevel = levels.get(__levelNumber-1);
 __currentLevel.start();
