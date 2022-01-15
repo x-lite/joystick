@@ -12,6 +12,7 @@ class ScoreBoard {
             this.__introPause = 2000
         }
     }
+
     show(score: number) {
         info('Show score: ' + score)
         utils.cls();
@@ -30,12 +31,17 @@ class ScoreBoard {
 
 class PacmanLevel implements Level {
 
-    MAX_TIME_ON_LEVEL = 30000;
+    MAX_TIME_ON_LEVEL: number;
     _pacman: Character;
     _isActive: boolean;
     _totalTime: number; //for tracking how long it took to complete the level - the longer it takes the lower the score
     
     constructor() {
+        if (__debug) {
+            this.MAX_TIME_ON_LEVEL = 2500
+        } else {
+            this.MAX_TIME_ON_LEVEL = 30000
+        }
         this.reset();
     }
     
@@ -45,8 +51,9 @@ class PacmanLevel implements Level {
         this._pacman.tick(tickInfo);
         this._totalTime+=tickInfo._delta;
         let litCount = 0;
+        let screenEmpty = true;
         if (this._totalTime < this.MAX_TIME_ON_LEVEL) {
-            utils.atEveryPoint(function(x: number, y: number):boolean{
+            screenEmpty = utils.atEveryPoint(function(x: number, y: number):boolean{
                 if (led.point(x, y)) {
                     litCount++;
                     if (litCount > 1) {
@@ -55,16 +62,12 @@ class PacmanLevel implements Level {
                 }
                 return true;
             })
-            for (let x = 0; x < 5; x++) {
-                for (let y = 0; y < 5; y++) {
-
-                }
-            }
         }
 
         info('Pacman complete')
-        this._isActive = false;
+        this._isActive = !screenEmpty;
     }
+    
     reset() {
         info('Resetting pacman level')
         this._pacman = new Pacman()
@@ -162,38 +165,6 @@ class BombLevel implements Level {
     }
     getScore() {
         return Math.floor(this._hits / 6)  
-    }
-}
-
-class EndOfLevel implements Level {
-
-    _isActive: boolean;
-
-    constructor() {
-        this.reset();
-    }
-
-    tick(tickInfo: TickInfo) {
-        let ghost = images.iconImage(IconNames.Ghost);
-        ghost.showImage(0);
-        basic.pause(2000);
-        this._isActive = false;
-        info('Pacman eol complete')
-    }
-
-    start() {
-        info('Pacman eol starting')
-        this._isActive = true;
-    }
-    isActive() {
-        return this._isActive;
-    }
-    reset() {
-        this._isActive = false;
-    }
-
-    getScore() {
-        return 0;
     }
 }
 

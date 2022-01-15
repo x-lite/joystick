@@ -7,23 +7,25 @@ namespace utils {
     }
 
     export function cls() {
-        fls(255);
+        fls(50);
         led.toggleAll();
     }
 
     export function fls(brightness: number) {
         atEveryPoint(function(x: number, y: number) {
             led.plotBrightness(x, y, brightness)
+            return true;
         })
     }
 
-    export function atEveryPoint(dothis: Function) {
+    export function atEveryPoint(dothisUntilIReturnFalse: Function): boolean {
         for (let x = 0; x < 5; x++) {
             for (let y = 0; y < 5; y++) {
-                if(!dothis(x,y)) {
-                    return;
+                if (!dothisUntilIReturnFalse(x,y)) {
+                    return false;
                 }
             }
         }
+        return true;
     }
 }
