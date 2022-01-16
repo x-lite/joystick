@@ -59,9 +59,9 @@ function reset () {
 }
 
 /** Debug settings */
-let __debug = true
+let __debug = false
 let __silent = false
-let __joystickActive = false
+let __joystickActive = true
 
 /** Global vars */
 let __lastTick = 0

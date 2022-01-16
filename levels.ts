@@ -15,8 +15,8 @@ class ScoreBoard {
 
     show(score: number) {
         info('Show score: ' + score)
-        utils.cls();
         pause(this.__introPause)
+        utils.cls();
         for (let x = 0; x < score; x++) {
             led.plot(x, 0)
             led.plot(x, 1)
@@ -81,13 +81,13 @@ class PacmanLevel implements Level {
         info('Pacman starting')
         this._isActive = true;
         this._totalTime = 0;
-        led.plotAll()
+        utils.fls(25);
     }
     isActive() {
         return this._isActive;
     }
     getScore() {
-        return 5 - Math.floor(this._totalTime/5000)
+        return 6 - Math.floor(this._totalTime/5000)
     }
 }
 
@@ -164,7 +164,7 @@ class BombLevel implements Level {
         return this._isActive;
     }
     getScore() {
-        return Math.floor(this._hits / 6)  
+        return 3; //Math.floor(this._hits / 6)  
     }
 }
 
